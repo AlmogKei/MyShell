@@ -5,35 +5,125 @@
 #include <unistd.h>
 #include <sys/utsname.h>
 #include <pwd.h>
-#define SIZE_BUFF 256
-char *getInputFromUser();
-/**
- * Splits a string into individual tokens based on whitespace.
- * 
- * This function takes a string as input and tokenizes it based on whitespace
- * characters (space, tab, newline). It dynamically allocates memory for an
- * array of strings to store the tokens. The caller is responsible for freeing
- * the memory allocated for the array and its elements when it's no longer needed.
- * 
- * @param input A pointer to the string to be split.
- * 
- * @return A dynamically allocated array of strings (char**) containing the tokens.
- *         The last element of the array is NULL. Returns NULL if input is NULL
- *         or if memory allocation fails.
- * 
- * @note The input string will be modified (tokenized) by this function.
- *       Make sure to use a copy of the original string if preservation
- *       of the original string is required.
- * 
- * @warning The caller is responsible for freeing the memory allocated for
- *          the returned array and its elements using free().
- */
-char **splitArgument(char *);
-char *my_strtok(char *str, const char *delim);
+#include <dirent.h>
+#include <sys/wait.h>
+#define SIZE_BUFF 4096
+#define SIZE_HOSTNAME 64
+
 
 void getLocation();
 
+/**
+ * @brief Reads input from the user until a newline character is encountered.
+ * Example input: "ls -l"
+ * @return A dynamically allocated string containing the user input.
+ */
+char *getInputFromUser();
+
+/**
+ * @brief Custom implementation of the strtok function to tokenize strings.
+ * Example input: "cd Documents"
+ * @param str The input string to be tokenized.
+ * @param delim The delimiter characters.
+ * @return A pointer to the next token in the string.
+ */
+char *my_strtok(char *str, const char *delim);
+
+/**
+ * @brief Splits a string into individual tokens based on space delimiter.
+ * Example input: "cp source.txt destination.txt"
+ * @param str The input string to be split.
+ * @return An array of pointers to tokens.
+ */
+char **splitArgument(char *str);
+
+/**
+ * @brief Logs out the user and exits the program.
+ * 
+ * @param input The input string to be freed before logout.
+ */
 void logout(char *input);
+
+/**
+ * @brief Displays the arguments passed to the function.
+ * 
+ * @param arguments An array of strings representing the arguments.
+ */
 void echo(char **arguments);
+
+/**
+ * @brief Changes the current working directory.
+ * Example input: "/path/to/source /path/to/destination"
+ * @param path An array of strings representing the path.
+ */
 void cd(char **path);
+
+/**
+ * @brief Copies the contents of one file to another.
+ * Example input: "/path/to/file.txt"
+ * @param arguments An array of strings representing the source and destination files.
+ */
 void cp(char **arguments);
+
+/**
+ * 
+ * @brief Lists the files in the current directory.
+ */
+void get_dir();
+
+/**
+ * @brief Deletes a file specified by the path.
+ * 
+ * @param path An array of strings representing the path of the file to be deleted.
+ */
+void delete(char **path);
+
+/**
+ * @brief Executes a system command.
+ * 
+ * @param arguments An array of strings representing the command and its arguments.
+ */
+void systemCall(char **arguments);
+
+/**
+ * @brief Executes two commands in a pipeline.
+ * Example input: "ls -l | grep 'search_term'"
+ * @param argv1 An array of strings representing the first command.
+ * @param argv2 An array of strings representing the second command.
+ */
+void mypipe(char **argv1, char **argv2);
+
+/**
+ * @brief Moves a file from one location to another.
+ * Example input: "/path/to/source /path/to/destination"
+ * @param arguments An array of strings representing the source and destination paths.
+ */
+void move(char **arguments);
+
+/**
+ * @brief Counts the number of arguments passed to the function.
+ * 
+ * @param arguments An array of strings representing the arguments.
+ */
+void wordCount(char **arguments);
+
+/**
+ * @brief Prints the arguments passed to the function without spaces.
+ * 
+ * @param arguments An array of strings representing the arguments.
+ */
+void echoppend(char **arguments);
+
+/**
+ * @brief Prints the arguments passed to the function with spaces.
+ * 
+ * @param arguments An array of strings representing the arguments.
+ */
+void echorite(char **arguments);
+
+/**
+ * @brief Reads and prints the contents of a file.
+ * 
+ * @param arguments An array of strings representing the filename.
+ */
+void readfile(char **arguments);
